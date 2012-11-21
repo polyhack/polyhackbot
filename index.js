@@ -2,6 +2,7 @@ var Jerk     = require( 'jerk' )
   , bogan    = require('boganipsum')
   , NTwitter = require('ntwitter')
   , options  = require('./options')
+  , version  = require('./package').version
   , twit
   , jerk
 
@@ -37,7 +38,7 @@ var Jerk     = require( 'jerk' )
         }
     ]
 
-  , start = function (secrets) {
+  , start = function (secrets, parentVersionString) {
       twit = new NTwitter(secrets.ntwitter)
 
       twit.verifyCredentials(function (err, data) {
@@ -49,7 +50,13 @@ var Jerk     = require( 'jerk' )
       })
 
       options.onConnect = function () {
-        setTimeout(jerk.say.bind(jerk, 'NickServ', 'identify ' + secrets.ircPassword), 5000)
+        setTimeout(function () {
+          jerk.say('NickServ', 'identify ' + secrets.ircPassword)
+          jerk.say(
+              '#polyhack'
+            , 'Hey peeps! I\'m back, running polyhackbot@' + version + ' and ' + (parentVersionString || 'unknown parent')
+          )
+        }, 5000)
       }
 
       jerk = Jerk(function (j) {
