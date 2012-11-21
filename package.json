@@ -1,0 +1,15 @@
+{
+    "name": "polyhackbot"
+  , "version": "0.0.0"
+  , "description": "Polyhack Bot / Freenode:polyhackbot / Twitter:@polyhackbot"
+  , "main": "index.js"
+  , "repository": {
+        "type": "git"
+      , "url": "git://github.com/polyhack/polyhackbot.git"
+    }
+  , "dependencies": {
+        "jerk": "~1.1.23"
+      , "ntwitter": "*"
+    }
+  , "private": true
+}

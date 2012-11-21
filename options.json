@@ -1,0 +1,19 @@
+{
+    "server"     : "irc.freenode.net"
+  , "nick"       : "polyhackbot"
+  , "channels"   : [ "#polyhack_tmp" ]
+  , "optionsUrl" : "https://github.com/polyhack/polyhackbot/blob/master/options.json"
+  , "users"      : [
+        "aetcore"
+      , "cliffano"
+      , "deoxxa"
+      , "joshgillies"
+      , "nicholasf"
+      , "rvagg"
+      , "SomeoneWeird"
+      , "thatguydan"
+      , "timoxley"
+      , "wolfeidau"
+      , "[Neurotic] "
+    ]
+}
