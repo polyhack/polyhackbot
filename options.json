@@ -1,7 +1,7 @@
 {
     "server"     : "irc.freenode.net"
   , "nick"       : "polyhackbot"
-  , "channels"   : [ "#polyhack_tmp" ]
+  , "channels"   : [ "#polyhack" ]
   , "optionsUrl" : "https://github.com/polyhack/polyhackbot/blob/master/options.json"
   , "users"      : [
         "aetcore"
