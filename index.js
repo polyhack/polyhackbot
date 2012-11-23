@@ -1,3 +1,5 @@
+const TROLL_PROBABILITY = 0.005 // 0.5% chance of being randomly trolled by the bot
+
 var Jerk     = require( 'jerk' )
   , bogan    = require('boganipsum')
   , NTwitter = require('ntwitter')
@@ -48,7 +50,7 @@ var Jerk     = require( 'jerk' )
       , {   on: /^.*$/
           , fn: function (message) {
               if (message.user == options.nick) return
-              if (Math.random() < 0.025) trollHandle.call(this, message) // 2.5% chance of random troll!
+              if (Math.random() < TROLL_PROBABILITY) trollHandle.call(this, message)
               troller.log(message.user, message.text[0])
             }
         }

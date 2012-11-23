@@ -1,5 +1,6 @@
 const MIN_STARTS  = 5
     , MAX_LENGTH  = 250
+    , WISDOM_PROBABILITY = 0.4 // 30% chance of random wisdom from the bot rather than your own words back
 
 var EchoMunge     = require('echomunge')
   , echomungeWeb  = require('echomunge-web')
@@ -24,7 +25,7 @@ var EchoMunge     = require('echomunge')
         callback(null, db.makeText({ maxLength: MAX_LENGTH, terminate: true }))
       }
 
-      if (enoughForUser(nick) && Math.random() < 0.8)
+      if (enoughForUser(nick) && Math.random() > WISDOM_PROBABILITY)
         ret(null, dbForUser(nick))
       else
         echomungeWeb(null, ret)
