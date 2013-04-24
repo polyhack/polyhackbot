@@ -1,13 +1,15 @@
 const TROLL_PROBABILITY = 0.005 // 0.5% chance of being randomly trolled by the bot
 
-var Jerk     = require( 'jerk' )
-  , bogan    = require('boganipsum')
-  , NTwitter = require('ntwitter')
-  , troller  = require('./troller')
-  , options  = require('./options')
-  , version  = require('./package').version
+var jerk             = require('jerk')
+  , bogan            = require('boganipsum')
+  , NTwitter         = require('ntwitter')
+  , NpmPublishStream = require('npm-publish-stream')
+  , NpmMaintainerFilterStream = require('./npm-maintainer-filter-stream')
+  , troller          = require('./troller')
+  , options          = require('./options')
+  , version          = require('./package').version
   , twit
-  , jerk
+  , bot
 
   , tweet = function (status, cb) {
       // twit.updateStatus() uses the wrong URL, needs trailling slash, so do it manually
@@ -36,7 +38,11 @@ var Jerk     = require( 'jerk' )
           , fn: function (message) {
               if (message.user == options.nick) return
               if (options.users.indexOf(message.user) == -1)
-                return message.say(message.user + ': Sorry, I don\'t have you in my list of users! Add yourself here: ' + options.optionsUrl)
+                return message.say(
+                    message.user
+                  + ': Sorry, I don\'t have you in my list of users! Add yourself here: '
+                  + options.optionsUrl
+                )
 
               var txt = message.text[0].replace(/^!tweet /, '')
               console.log('tweeting:', txt)
@@ -54,7 +60,7 @@ var Jerk     = require( 'jerk' )
               troller.log(message.user, message.text[0])
             }
         }
-      , {   on: /polyhack|nodejsau/
+      , {   on: /polyhack|nodejsau/i
           , fn: trollHandle
         }
     ]
@@ -72,19 +78,47 @@ var Jerk     = require( 'jerk' )
 
       options.onConnect = function () {
         setTimeout(function () {
-          jerk.say('NickServ', 'identify ' + secrets.ircPassword)
-          jerk.say(
+          bot.say('NickServ', 'identify ' + secrets.ircPassword)
+          bot.say(
               '#polyhack'
-            , 'Hey peeps! I\'m back, running polyhackbot@' + version + ' and ' + (parentVersionString || 'unknown parent')
+            ,   'Hey peeps! I\'m back, running polyhackbot@'
+              + version
+              + ' and '
+              + (parentVersionString || 'unknown parent')
           )
-        }, 7000)
+
+          new NpmPublishStream()
+            .pipe(maintainerFilterStream)
+            .on('data', handleNpmData)
+            .on('error', console.log)
+        }, 5000)
       }
 
-      jerk = Jerk(function (j) {
+      bot = jerk(function (j) {
         handlers.forEach(function (handler) {
           j.watch_for(handler.on, handler.fn)
         })
       }).connect(options)
+
+      var maintainerFilterStream = new NpmMaintainerFilterStream()
+        , setMaintainers = function (maintainers) {
+            maintainerFilterStream.setMaintainers(maintainers)
+          }
+        , handleNpmData = function (data) {
+            bot.say(
+                '#polyhack'
+              ,   '[npm] '
+                + data.id + '@' + data.doc['dist-tags'].latest
+                + ' <http://npm.im/' + data.id + '>: '
+                + (data.doc.description || '')
+                + '(' + data.doc.versions[data.doc['dist-tags'].latest].maintainers
+                          .map(function (m) { return '@' + m.name }) + ')'
+            )
+          }
+
+      return {
+          setMaintainers: setMaintainers
+      }
     }
 
 module.exports = start
