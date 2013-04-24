@@ -88,9 +88,9 @@ var jerk             = require('jerk')
           )
 
           new NpmPublishStream()
+            .on('error', console.log)
             .pipe(maintainerFilterStream)
             .on('data', handleNpmData)
-            .on('error', console.log)
         }, 5000)
       }
 
