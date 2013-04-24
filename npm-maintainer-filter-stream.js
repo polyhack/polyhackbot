@@ -1,4 +1,4 @@
-const TransformStream  = require('stream').Transform
+const TransformStream  = require('readable-stream').Transform
     , inherits         = require('util').inherits
 
 function isMaintainer (maintainers, pkg) {

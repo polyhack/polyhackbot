@@ -1,6 +1,6 @@
 {
   "name": "polyhackbot",
-  "version": "0.0.2-1",
+  "version": "0.1.0",
   "description": "Polyhack Bot / Freenode:polyhackbot / Twitter:@polyhackbot",
   "main": "index.js",
   "repository": {
@@ -13,7 +13,8 @@
     "boganipsum": "~0.0.0",
     "echomunge": "~0.0.1",
     "echomunge-web": "~0.0.0",
-    "npm-publish-stream": "0.0.1"
+    "npm-publish-stream": "0.1.0",
+    "readable-stream": "~1.0.2"
   },
   "private": true
 }
