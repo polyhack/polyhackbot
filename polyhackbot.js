@@ -1,8 +1,9 @@
-const TROLL_PROBABILITY = 0.005 // 0.5% chance of being randomly trolled by the bot
+const TROLL_PROBABILITY = 0.01 // 1% chance of being randomly trolled by the bot
 
 var jerk             = require('jerk')
   , bogan            = require('boganipsum')
   , NTwitter         = require('ntwitter')
+  , npmMaintainers   = require('npm-maintainers-au')
   , NpmPublishStream = require('npm-publish-stream')
   , NpmMaintainerFilterStream = require('./npm-maintainer-filter-stream')
   , troller          = require('./troller')
@@ -65,7 +66,7 @@ var jerk             = require('jerk')
         }
     ]
 
-  , start = function (secrets, parentVersionString) {
+  , start = function (secrets) {
       twit = new NTwitter(secrets.ntwitter)
 
       twit.verifyCredentials(function (err, data) {
@@ -83,8 +84,6 @@ var jerk             = require('jerk')
               '#polyhack'
             ,   'Hey peeps! I\'m back, running polyhackbot@'
               + version
-              + ' and '
-              + (parentVersionString || 'unknown parent')
           )
 
           new NpmPublishStream()
@@ -122,3 +121,17 @@ var jerk             = require('jerk')
     }
 
 module.exports = start
+
+if (require.main === module) {
+  var polyhackbot = start(require('./secrets'))
+
+  function updateMaintainers () {
+    npmMaintainers(function (err, data) {
+      if (err) return console.log(err)
+      polyhackbot.setMaintainers(data.map(function (u) { return u.npmLogin }))
+    })    
+  }
+
+  setInterval(updateMaintainers, 1000 * 60 * 60 * 24)
+  updateMaintainers()
+}

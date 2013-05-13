@@ -1,20 +1,21 @@
 {
-  "name": "polyhackbot",
-  "version": "0.1.1",
-  "description": "Polyhack Bot / Freenode:polyhackbot / Twitter:@polyhackbot",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/polyhack/polyhackbot.git"
-  },
-  "dependencies": {
-    "jerk": "~1.1.23",
-    "ntwitter": "~0.5.0",
-    "boganipsum": "~0.0.0",
-    "echomunge": "~0.0.1",
-    "echomunge-web": "~0.0.0",
-    "npm-publish-stream": "0.1.0",
-    "readable-stream": "~1.0.2"
-  },
-  "private": true
+    "name"         : "polyhackbot"
+  , "version"      : "0.2.0"
+  , "description"  : "Polyhack Bot / Freenode:polyhackbot / Twitter:@polyhackbot"
+  , "main"         : "polyhackbot.js"
+  , "repository"   : {
+        "type"               : "git"
+      , "url"                : "git://github.com/polyhack/polyhackbot.git"
+    }
+  , "dependencies" : {
+        "jerk"               : "~1.1.23"
+      , "ntwitter"           : "~0.5.0"
+      , "boganipsum"         : "~0.0.0"
+      , "echomunge"          : "~0.0.1"
+      , "echomunge-web"      : "~0.0.0"
+      , "npm-publish-stream" : "0.1.0"
+      , "readable-stream"    : "~1.0.2"
+      , "npm-maintainers-au" : "~0.0.0"
+    }
+  , "private"      : true
 }
