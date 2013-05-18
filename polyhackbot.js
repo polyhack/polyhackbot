@@ -11,6 +11,7 @@ var jerk             = require('jerk')
   , version          = require('./package').version
   , twit
   , bot
+  , streaming        = false
 
   , tweet = function (status, cb) {
       // twit.updateStatus() uses the wrong URL, needs trailling slash, so do it manually
@@ -86,11 +87,15 @@ var jerk             = require('jerk')
               + version
           )
 
+          if (streaming) return
+
           new NpmPublishStream()
             .on('error', console.log)
             .pipe(maintainerFilterStream)
             .on('data', handleNpmData)
-        }, 5000)
+
+          streaming = true
+        }, 7000)
       }
 
       bot = jerk(function (j) {
@@ -128,10 +133,11 @@ if (require.main === module) {
   function updateMaintainers () {
     npmMaintainers(function (err, data) {
       if (err) return console.log(err)
-      polyhackbot.setMaintainers(data.map(function (u) { return u.npmLogin }))
+      if (data.length)
+        polyhackbot.setMaintainers(data.map(function (u) { return u.npmLogin }))
     })    
   }
 
-  setInterval(updateMaintainers, 1000 * 60 * 60 * 24)
+  setInterval(updateMaintainers, 1000 * 60 * 60 * (1/6))
   updateMaintainers()
 }

@@ -24,13 +24,13 @@ function NpmMaintainerFilterStream() {
 
 inherits(NpmMaintainerFilterStream, TransformStream)
 
-NpmMaintainerFilterStream.prototype._transform = function(chunk, encoding, callback) {
+NpmMaintainerFilterStream.prototype._transform = function (chunk, encoding, callback) {
   if (isMaintainer(this._maintainers, chunk.doc))
     this.push(chunk)
   callback()
 }
 
-NpmMaintainerFilterStream.prototype.setMaintainers = function(maintainers) {
+NpmMaintainerFilterStream.prototype.setMaintainers = function (maintainers) {
   this._maintainers = maintainers
 }
 
