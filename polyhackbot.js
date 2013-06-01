@@ -72,7 +72,7 @@ var jerk             = require('jerk')
 
       twit.verifyCredentials(function (err, data) {
         if (err) {
-          console.err('COULD NOT VERIFY TWITTER CREDENTIALS', err)
+          console.error('COULD NOT VERIFY TWITTER CREDENTIALS', err)
           return process.exit(-1)
         }
         console.log('Verified Twitter credentials:', JSON.stringify(data))
@@ -81,11 +81,11 @@ var jerk             = require('jerk')
       options.onConnect = function () {
         setTimeout(function () {
           bot.say('NickServ', 'identify ' + secrets.ircPassword)
-          bot.say(
+          /*bot.say(
               '#polyhack'
             ,   'Hey peeps! I\'m back, running polyhackbot@'
               + version
-          )
+          )*/
 
           if (streaming) return
 
