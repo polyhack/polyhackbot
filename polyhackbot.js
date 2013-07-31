@@ -8,7 +8,7 @@ var jerk             = require('jerk')
   , NpmMaintainerFilterStream = require('./npm-maintainer-filter-stream')
   , troller          = require('./troller')
   , options          = require('./options')
-  , version          = require('./package').version
+  , seriousNerds     = require('./serious_nerds')
   , twit
   , bot
   , streaming        = false
@@ -24,7 +24,11 @@ var jerk             = require('jerk')
     }
 
   , trollHandle = function (message) {
-      if (message.user == options.nick) return
+      if (message.user == options.nick)
+        return
+      if (seriousNerds.indexOf(message.user) > -1)
+        return
+
       troller.troll(message.user, function (err, msg) {
         message.say(message.user + ': ' + msg)
       })
@@ -125,19 +129,19 @@ var jerk             = require('jerk')
       }
     }
 
-module.exports = start
+function updateMaintainers () {
+  npmMaintainers(function (err, data) {
+    if (err) return console.log(err)
+    if (data.length)
+      polyhackbot.setMaintainers(data.map(function (u) { return u.npmLogin }))
+  })
+}
 
 if (require.main === module) {
   var polyhackbot = start(require('./secrets'))
 
-  function updateMaintainers () {
-    npmMaintainers(function (err, data) {
-      if (err) return console.log(err)
-      if (data.length)
-        polyhackbot.setMaintainers(data.map(function (u) { return u.npmLogin }))
-    })    
-  }
-
   setInterval(updateMaintainers, 1000 * 60 * 60 * (1/6))
   updateMaintainers()
 }
+
+module.exports = start
