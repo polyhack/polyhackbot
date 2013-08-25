@@ -1,5 +1,4 @@
-const TransformStream  = require('readable-stream').Transform
-    , inherits         = require('util').inherits
+const through2 = require('through2')
 
 function isMaintainer (maintainers, pkg) {
   if (!pkg || !maintainers.length)
@@ -7,6 +6,7 @@ function isMaintainer (maintainers, pkg) {
 
   var v = pkg['dist-tags'] && pkg['dist-tags'].latest
     , i
+
   if (v && pkg.versions && pkg.versions[v] && Array.isArray(pkg.versions[v].maintainers)) {
     for (i = 0; i < pkg.versions[v].maintainers.length; i++) {
       if (pkg.versions[v].maintainers[i].name
@@ -14,24 +14,23 @@ function isMaintainer (maintainers, pkg) {
         return true
     }
   }
+
   return false
 }
 
-function NpmMaintainerFilterStream() {
-  TransformStream.call(this, { objectMode: true })
-  this._maintainers = []
+function npmMaintainerFilterStream () {
+  var maintainers = []
+    , stream = through2({ objectMode: true }, function (chunk, enc, callback) {
+      if (isMaintainer(maintainers, chunk.doc))
+        this.push(chunk)
+      callback()
+    })
+
+  stream.setMaintainers = function (_maintainers) {
+    maintainers = _maintainers
+  }
+
+  return stream
 }
 
-inherits(NpmMaintainerFilterStream, TransformStream)
-
-NpmMaintainerFilterStream.prototype._transform = function (chunk, encoding, callback) {
-  if (isMaintainer(this._maintainers, chunk.doc))
-    this.push(chunk)
-  callback()
-}
-
-NpmMaintainerFilterStream.prototype.setMaintainers = function (maintainers) {
-  this._maintainers = maintainers
-}
-
-module.exports = NpmMaintainerFilterStream
+module.exports = npmMaintainerFilterStream

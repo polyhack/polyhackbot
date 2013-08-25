@@ -1,35 +1,57 @@
-const MIN_STARTS  = 5
+const TROLL_PROBABILITY = 0.001 // 0.1% chance of being randomly trolled by the bot
+    , MIN_STARTS  = 5
     , MAX_LENGTH  = 250
-    , WISDOM_PROBABILITY = 0.4 // 30% chance of random wisdom from the bot rather than your own words back
+    , WISDOM_PROBABILITY = 0.3 // 30% chance of random wisdom from the bot rather than your own words back
 
-var EchoMunge     = require('echomunge')
-  , echomungeWeb  = require('echomunge-web')
+const EchoMunge    = require('echomunge')
+    , echomungeWeb = require('echomunge-web')
+    , seriousNerds = require('./serious_nerds').map(function (nerd) {
+        return nerd[0] == '/' ? new RegExp(nerd) : nerd
+      })
 
-  , databases     = {}
+var databases = {}
 
-  , dbForUser     = function (nick) {
-      return databases['$' + nick] || (databases['$' + nick] = new EchoMunge())
-    }
+function dbForUser (nick) {
+  return databases['$' + nick] || (databases['$' + nick] = new EchoMunge())
+}
 
-  , logForUser    = function (nick, msg) {
-      dbForUser(nick).recordSentence(msg)
-    }
+function logForUser (nick, msg) {
+  dbForUser(nick).recordSentence(msg)
+}
 
-  , enoughForUser = function (nick) {
-      return dbForUser(nick).starts.length > MIN_STARTS
-    }
+function enoughForUser (nick) {
+  return dbForUser(nick).starts.length > MIN_STARTS
+}
 
-  , trollForUser  = function (nick, callback) {
-      var ret = function (err, db, urls) {
-        if (urls) console.log('fetched from web:',urls)
-        callback(null, db.makeText({ maxLength: MAX_LENGTH, terminate: true }))
-      }
+function trollForUser (nick, callback) {
+  var ret = function (err, db, urls) {
+    if (urls)
+      console.log('fetched from web:',urls)
+    callback(null, db.makeText({ maxLength: MAX_LENGTH, terminate: true }))
+  }
 
-      if (enoughForUser(nick) && Math.random() > WISDOM_PROBABILITY)
-        ret(null, dbForUser(nick))
-      else
-        echomungeWeb(null, ret)
-    }
+  if (enoughForUser(nick) && Math.random() > WISDOM_PROBABILITY)
+    ret(null, dbForUser(nick))
+  else
+    echomungeWeb(null, ret)
+}
 
-module.exports.log   = logForUser
-module.exports.troll = trollForUser
+function onKeyword (options, message) {
+  if (message.user == options.nick || seriousNerds.indexOf(message.user) > -1)
+    return
+
+  trollForUser(message.user, function (err, msg) {
+    message.say(message.user + ': ' + msg)
+  })
+}
+
+function channelMessage (options, message) {
+  if (message.user == options.nick)
+    return
+  if (Math.random() < TROLL_PROBABILITY)
+    onKeyword(options, message)
+  logForUser(message.user, message.text[0])
+}
+
+module.exports             = channelMessage
+module.exports.onKeyword = onKeyword
