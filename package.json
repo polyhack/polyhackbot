@@ -1,6 +1,6 @@
 {
   "name": "polyhackbot",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Polyhack Bot / Freenode:polyhackbot / Twitter:@polyhackbot",
   "main": "polyhackbot.js",
   "repository": {
