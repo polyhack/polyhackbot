@@ -6,10 +6,16 @@ var maintainerFilterStream = new NpmMaintainerFilterStream()
   , streaming = false
 
 function handleNpmData (data) {
-  var msg = '[npm] '
+  var desc = (data.doc.description || '')
+    , msg
+
+  if (desc.length > 128)
+    desc = desc.substring(0, 127) + '…'
+
+  msg = '[npm] '
       + data.id + '@' + data.doc['dist-tags'].latest
       + ' <http://npm.im/' + data.id + '>: '
-      + (data.doc.description || '')
+      + desc
       + ' (' + data.doc.versions[data.doc['dist-tags'].latest].maintainers
                 .map(function (m) { return '@' + m.name }).join(', ') + ')'
 
