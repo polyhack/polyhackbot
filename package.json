@@ -8,16 +8,16 @@
     "url": "git://github.com/polyhack/polyhackbot.git"
   },
   "dependencies": {
-    "jerk": "~1.1.23",
-    "ntwitter": "~0.5.0",
-    "boganipsum": "~0.0.0",
-    "echomunge": "~0.0.1",
-    "echomunge-web": "~0.0.0",
-    "npm-publish-stream": "~0.3.1",
-    "readable-stream": "~1.0.2",
-    "npm-maintainers-au": "~0.0.0",
-    "delayed": "0.0.0",
-    "through2": "~0.2.1"
+    "jerk": "*",
+    "ntwitter": "*",
+    "boganipsum": "*",
+    "echomunge": "*",
+    "echomunge-web": "*",
+    "npm-publish-stream": "*",
+    "npm-maintainers-au": "*",
+    "delayed": "*",
+    "through2": "*"
   },
   "private": true
 }
+
