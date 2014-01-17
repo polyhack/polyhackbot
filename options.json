@@ -3,6 +3,12 @@
   , "nick"       : "polyhackbot"
   , "channels"   : [ "#polyhack" ]
   , "optionsUrl" : "https://github.com/polyhack/polyhackbot/blob/master/options.json"
+  , "couch": {
+        "name": "npm.nodejs.org.au"
+      , "url": "http://npm.nodejs.org.au:5984/_active_tasks"
+      , "checkInterval": 3600000
+      , "statusChannel": "#polyhack"
+    }
   , "users"      : [
         "aetcore"
       , "cliffano"

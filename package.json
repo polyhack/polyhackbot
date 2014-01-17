@@ -16,8 +16,12 @@
     "npm-publish-stream": "*",
     "npm-maintainers-au": "*",
     "delayed": "*",
-    "through2": "*"
+    "through2": "*",
+    "hyperdirect": "0.0.0",
+    "hyperzip": "0.0.0",
+    "stream-browserify": "~0.1.2",
+    "bl": "~0.7.0",
+    "xtend": "~2.1.2"
   },
   "private": true
 }
-
